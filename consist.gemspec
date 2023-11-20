@@ -27,4 +27,6 @@ Gem::Specification.new do |spec|
 
   # Runtime dependencies
   spec.add_dependency "thor", "~> 1.2"
+  spec.add_dependency "net-ssh", "~> 7.0"
+  spec.add_dependency "sshkit", "~> 1.21"
 end
