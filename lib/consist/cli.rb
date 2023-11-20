@@ -9,7 +9,7 @@ module Consist
 
     map %w[-v --version] => "version"
 
-    desc "version", "Display consist version", hide: true
+    desc "version", "Display consist version"
     def version
       say "consist/#{VERSION} #{RUBY_DESCRIPTION}"
     end
