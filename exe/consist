@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require "consist"
+Consist::CLI.start(ARGV)

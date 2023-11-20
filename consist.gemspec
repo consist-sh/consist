@@ -1,20 +1,20 @@
-require_relative "lib/example/version"
+require_relative "lib/consist/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "example"
-  spec.version = Example::VERSION
-  spec.authors = ["Example Owner"]
-  spec.email = ["owner@example.com"]
+  spec.name = "consist"
+  spec.version = Consist::VERSION
+  spec.authors = ["John McDowall"]
+  spec.email = ["j@jmd.fm"]
 
-  spec.summary = ""
-  spec.homepage = "https://github.com/mattbrictson/gem"
+  spec.summary = "The one person framework server scaffolder"
+  spec.homepage = "https://github.com/johnmcdowall/consist"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0"
 
   spec.metadata = {
-    "bug_tracker_uri" => "https://github.com/mattbrictson/gem/issues",
-    "changelog_uri" => "https://github.com/mattbrictson/gem/releases",
-    "source_code_uri" => "https://github.com/mattbrictson/gem",
+    "bug_tracker_uri" => "https://github.com/johnmcdowall/consist/issues",
+    "changelog_uri" => "https://github.com/johnmcdowall/consist/releases",
+    "source_code_uri" => "https://github.com/johnmcdowall/consist",
     "homepage_uri" => spec.homepage,
     "rubygems_mfa_required" => "true"
   }
