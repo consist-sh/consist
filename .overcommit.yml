@@ -18,10 +18,10 @@ PreCommit:
   LocalPathsInGemfile:
     enabled: true
 
-  RuboCop:
+  Standard:
     enabled: true
     required_executable: bundle
-    command: ["bundle", "exec", "rubocop"]
+    command: ["bundle", "exec", "standard"]
     on_warn: fail
 
   YamlSyntax:

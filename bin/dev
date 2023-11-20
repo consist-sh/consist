@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+# Prevent failures from being reported twice.
+Thread.report_on_exception = false
+
+require "consist"
+
+begin
+  Consist::CLI.start(ARGV)
+rescue StandardError => e
+  puts "  \e[31mERROR (#{e.class}): #{e.message}\e[0m"
+  puts e.backtrace if ENV['VERBOSE']
+  exit 1
+end

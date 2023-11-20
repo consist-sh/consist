@@ -1,6 +1,6 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
-require "rubocop/rake_task"
+require "standard/rake"
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -8,9 +8,7 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["test/**/*_test.rb"]
 end
 
-RuboCop::RakeTask.new
-
-task default: %i[test rubocop]
+task default: %i[test standard]
 
 # == "rake release" enhancements ==============================================
 
@@ -38,7 +36,7 @@ task :verify_gemspec_files do
     not, you may need to delete these files or modify the gemspec to ensure
     that they are not included in the gem by mistake:
 
-    #{ignored_by_git.join("\n").gsub(/^/, '  ')}
+    #{ignored_by_git.join("\n").gsub(/^/, "  ")}
 
   ERROR
 end
@@ -57,7 +55,6 @@ namespace :bump do
 
   task :ruby do
     replace_in_file "consist.gemspec", /ruby_version = .*">= (.*)"/ => RubyVersions.lowest
-    replace_in_file ".rubocop.yml", /TargetRubyVersion: (.*)/ => RubyVersions.lowest
     replace_in_file ".github/workflows/ci.yml", /ruby: (\[.+\])/ => RubyVersions.all.inspect
   end
 
