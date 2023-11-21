@@ -2,10 +2,13 @@ require "thor"
 require "sshkit"
 require "sshkit/dsl"
 
+require "consist/recipe"
+require "consist/recipes"
+require "consist/step"
+
 module Consist
   class CLI < Thor
     extend ThorExt::Start
-    include SSHKit::DSL
 
     map %w[-v --version] => "version"
 
@@ -22,6 +25,11 @@ module Consist
           execute "true"
         end
       end
+    end
+
+    desc "scaffold", "Apply a given recipe to (a) server(s)"
+    def scaffold(_recipe, server_ip)
+      Consist::Recipes.new(server_ip)
     end
   end
 end
