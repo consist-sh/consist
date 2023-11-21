@@ -4,4 +4,5 @@ user :root
 
 steps do
   step :update_apt_packages
+  step :install_apt_packages
 end
