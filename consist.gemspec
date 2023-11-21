@@ -4,11 +4,11 @@ Gem::Specification.new do |spec|
   spec.name = "consist"
   spec.version = Consist::VERSION
   spec.authors = ["John McDowall"]
-  spec.email = ["j@jmd.fm"]
+  spec.email = ["john@kantan.io"]
 
   spec.summary = "The one person framework server scaffolder"
   spec.homepage = "https://github.com/johnmcdowall/consist"
-  spec.license = "MIT"
+  spec.license = "LGPL-3.0"
   spec.required_ruby_version = ">= 3.0"
 
   spec.metadata = {

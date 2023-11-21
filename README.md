@@ -63,7 +63,9 @@ has a lot of nonsense with case sensitivity, Terraform does [weird unexpected th
 I also didn't want to maintain specific knowledge of these infrastructure
 as code tools in my brain anymore, and all of their peculiarities and oddities.
 
-If you like those tools, go ahead and use them. Ain't nobody stopping you.
+If you like those tools, go ahead and use them. Use raw shell scripts if you want.
+
+Ain't nobody stopping you.
 
 ## Key Concepts
 
@@ -106,6 +108,37 @@ shell "Start NTP and Fail2Ban" do
   EOS
 end
 ```
+
+### Consistfile
+
+I'm working on this right now. A `Consistfile` is a portable giant
+file of a recipe and all its steps. Something like:
+
+```ruby
+consist do
+  recipe :main do
+    step :step1
+    step :step2
+    step :step3
+    ...
+  end
+
+  step :step1 do
+  ...
+  end
+
+  file :apt_auto_upgrades do
+    <<~EOS
+    APT::Periodic::AutocleanInterval "7";
+    APT::Periodic::Update-Package-Lists "1";
+    APT::Periodic::Unattended-Upgrade "1";
+    EOS
+  end
+end
+```
+
+Given a `Consistfile` you could then say `consist up <ip_address>` and
+it would just work.
 
 ## Is it good?
 

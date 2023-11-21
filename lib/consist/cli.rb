@@ -31,5 +31,9 @@ module Consist
     def scaffold(_recipe, server_ip)
       Consist::Recipes.new(server_ip)
     end
+
+    desc "up", "Run a Consistfile against a server"
+    def up
+    end
   end
 end
