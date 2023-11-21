@@ -15,6 +15,7 @@ a Rails monolith.
 - [Quick start](#quick-start)
 - [Support](#support)
 - [Rationale](#rationale)
+- [Key Concepts](#key-concepts)
 - [Is It Good?](#is-it-good%3F)
 - [License](#license)
 - [Code of conduct](#code-of-conduct)
@@ -26,19 +27,44 @@ a Rails monolith.
 gem install consist
 ```
 
+You must be already auth'd with the server you want to scaffold. `consist` will use
+your SSH id to perform actions.
+
+Then:
+
+```sh
+consist scaffold <recipe_name> root <ip_address>
+```
+
+Will kick off the scaffolding of that given server with the given recipe.
+
 ## Rationale
 
-I wanted a super-simple tool, that was baked in Ruby, for setting up random servers to
-specific configurations. This is the result.
+I wanted a super-simple tool, that was baked in Ruby, for setting up
+random servers to specific configurations. This is the result.
+
+On a scale of 1 to 10, with 10 being Terraform, this tool is basically
+as low-rent you can get to hand running scripts yourself, so about a 3
+on the scale.
+
+If you know how to shell script what you want, you can stick it in a step,
+and add it to a recipe.
 
 ### Why not use Terraform / Ansible / Salt etc?
 
 Because I think they are bad tools that are overblown for my needs. I wanted something
-I could hack on, and will work specifically without ambiguity. I also didn't want to
-maintain specific knowledge of these infrastructure as code tools in my brain anymore,
-and all of their peculiarities and oddities.
+I could hack on, and will work specifically without ambiguity. For example, Ansible
+has a lot of nonsense with case sensitivity, Terraform does [weird unexpected things](https://github.com/hashicorp/terraform/issues/16330).
+
+I also didn't want to maintain specific knowledge of these infrastructure
+as code tools in my brain anymore, and all of their peculiarities and oddities.
 
 If you like those tools, go ahead and use them. Ain't nobody stopping you.
+
+## Key Concepts
+
+Consist leans on two primary ideas: recipes and steps. Recipes contain one or more
+steps. Steps tend to be atomic and idempotent.
 
 ## Is it good?
 
