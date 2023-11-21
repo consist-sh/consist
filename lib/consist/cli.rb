@@ -5,6 +5,7 @@ require "sshkit/dsl"
 require "consist/recipe"
 require "consist/recipes"
 require "consist/step"
+require "consist/consistfile"
 
 module Consist
   class CLI < Thor
@@ -33,7 +34,8 @@ module Consist
     end
 
     desc "up", "Run a Consistfile against a server"
-    def up
+    def up(server_ip)
+      Consist::Consistfile.new(server_ip)
     end
   end
 end

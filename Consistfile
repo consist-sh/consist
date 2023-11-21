@@ -1,0 +1,51 @@
+consist do
+  file :apt_auto_upgrade do
+    <<~EOS
+      APT::Periodic::AutocleanInterval "7";
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+    EOS
+  end
+
+  recipe :kamal_single_server do
+    name "Kamal Single Server Scaffold"
+
+    steps do
+      step :update_apt_packages do
+        required_user :root
+
+        upload_file message: "Uploading APT config...", local_file: :apt_auto_upgrade,
+          remote_path: "/etc/apt/apt.conf.d/20auto-upgrades"
+
+        shell do
+          <<~EOS
+            apt-get update && apt-get upgrade -y
+          EOS
+        end
+      end
+
+      step :install_apt_packages do
+        required_user :root
+
+        shell "Installing essential packages" do
+          <<~EOS
+            apt-get -y remove systemd-timesyncd
+            timedatectl set-ntp no
+            apt-get -y install build-essential curl fail2ban git ntp vim
+            apt-get autoremove
+            apt-get autoclean
+          EOS
+        end
+
+        shell "Start NTP and Fail2Ban" do
+          <<~EOS
+            service ntp restart
+            service fail2ban restart
+          EOS
+        end
+      end
+    end
+  end
+end
+
+# vim: filetype=ruby

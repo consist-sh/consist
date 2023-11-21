@@ -23,6 +23,7 @@ module Consist
     def initialize(id:, &block)
       @commands = []
       @id = id
+      @required_user = :root
       instance_eval(&block)
     end
 
@@ -56,8 +57,18 @@ module Consist
         when :exec
           command[:commands].each { exec(executor, _1) }
         when :upload
-          local_path = File.expand_path("../steps/#{@id}/#{command[:local_file]}", __dir__)
-          upload(executor, local_path, command[:remote_path])
+          if command[:local_file].class == Symbol
+            puts "---> Uploading defined file #{command[:local_file]}"
+            target_file = Consist.files.detect { |f| f[:id] == command[:local_file] }
+            raise "\n\nNo declared file of ID `#{command[:local_file]}`" unless target_file
+
+            contents = StringIO.new(target_file[:contents])
+            upload_defined_file(executor, contents, command[:remote_path])
+          else
+            local_path = File.expand_path("../steps/#{@id}/#{command[:local_file]}", __dir__)
+            upload(executor, local_path, command[:remote_path])
+          end
+
         end
       end
     end
@@ -65,11 +76,21 @@ module Consist
     private
 
     def exec(executor, command)
-      executor.send(:execute, command, interaction_handler: StreamOutputInteractionHandler.new)
+      executor.as @required_user do
+        executor.send(:execute, command, interaction_handler: StreamOutputInteractionHandler.new)
+      end
     end
 
     def upload(executor, local_path, remote_path)
-      executor.send(:upload!, local_path, remote_path, interaction_handler: StreamOutputInteractionHandler.new)
+      executor.as @required_user do
+        executor.send(:upload!, local_path, remote_path, interaction_handler: StreamOutputInteractionHandler.new)
+      end
+    end
+
+    def upload_defined_file(executor, contents, remote_path)
+      executor.as @required_user do
+        executor.upload! contents, remote_path
+      end
     end
 
     def banner(message)

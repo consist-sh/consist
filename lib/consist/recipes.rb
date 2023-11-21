@@ -17,9 +17,7 @@ module Consist
           puts "Executing Step: #{step.name}"
 
           on("#{step.required_user}@#{server_ip}") do
-            as step.required_user do
-              step.perform(self)
-            end
+            step.perform(self)
           end
         end
 
