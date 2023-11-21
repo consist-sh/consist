@@ -43,6 +43,16 @@ module Consist
       @commands << {message:, commands: command.split('\n').compact}
     end
 
+    def perform(executor)
+      @commands.each do |command|
+        banner(command[:message]) unless command[:message].empty?
+
+        command[:commands].each do |cmd|
+          exec(executor, cmd)
+        end
+      end
+    end
+
     private
 
     def exec(executor, command)
@@ -56,16 +66,6 @@ module Consist
       puts "*" * msg.length
       puts msg
       puts "*" * msg.length
-    end
-
-    def perform(executor)
-      @commands.each do |command|
-        banner(command[:message]) unless command[:message].empty?
-
-        command[:commands].each do |cmd|
-          exec(executor, cmd)
-        end
-      end
     end
   end
 end
