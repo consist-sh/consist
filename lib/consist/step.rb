@@ -20,8 +20,9 @@ module Consist
   class Step
     include SSHKit::DSL
 
-    def initialize(&block)
+    def initialize(id:, &block)
       @commands = []
+      @id = id
       instance_eval(&block)
     end
 
@@ -40,15 +41,23 @@ module Consist
 
       command = yield
 
-      @commands << {message:, commands: command.split('\n').compact}
+      @commands << {message:, type: :exec, commands: command.split('\n').compact}
+    end
+
+    def upload_file(message:, local_file:, remote_path:)
+      @commands << {message:, type: :upload, local_file:, remote_path:}
     end
 
     def perform(executor)
       @commands.each do |command|
         banner(command[:message]) unless command[:message].empty?
 
-        command[:commands].each do |cmd|
-          exec(executor, cmd)
+        case command[:type]
+        when :exec
+          command[:commands].each { exec(executor, _1) }
+        when :upload
+          local_path = File.expand_path("../steps/#{@id}/#{command[:local_file]}", __dir__)
+          upload(executor, local_path, command[:remote_path])
         end
       end
     end
@@ -57,6 +66,10 @@ module Consist
 
     def exec(executor, command)
       executor.send(:execute, command, interaction_handler: StreamOutputInteractionHandler.new)
+    end
+
+    def upload(executor, local_path, remote_path)
+      executor.send(:upload!, local_path, remote_path, interaction_handler: StreamOutputInteractionHandler.new)
     end
 
     def banner(message)

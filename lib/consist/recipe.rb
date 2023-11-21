@@ -31,7 +31,7 @@ module Consist
       target_path = File.join("../../", "steps", step_name.to_s, "step.rb")
       step_path = File.expand_path(target_path, __FILE__)
       step_content = File.read(step_path)
-      @steps << Step.new { instance_eval(step_content) }
+      @steps << Step.new(id: step_name) { instance_eval(step_content) }
     end
   end
 end
