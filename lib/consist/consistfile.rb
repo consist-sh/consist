@@ -2,10 +2,11 @@
 
 module Consist
   class << self
-    attr_accessor :files
+    attr_accessor :files, :config
   end
 
   @files = []
+  @config = {}
 
   class Consistfile
     include SSHKit::DSL
@@ -41,6 +42,10 @@ module Consist
       contents = yield
 
       Consist.files << {id:, contents:}
+    end
+
+    def config(id, val)
+      Consist.config[id] = val
     end
   end
 end

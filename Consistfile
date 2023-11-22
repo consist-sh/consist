@@ -1,4 +1,6 @@
 consist do
+  config :hostname, "testexample.com"
+
   file :apt_auto_upgrade do
     <<~EOS
       APT::Periodic::AutocleanInterval "7";
@@ -7,11 +9,29 @@ consist do
     EOS
   end
 
+  file :hostname do
+    <<~EOS
+      <%= hostname %>
+    EOS
+  end
+
   recipe :kamal_single_server do
     name "Kamal Single Server Scaffold"
 
     steps do
+      step :set_hostname do
+        upload_file message: "Setting hostname", local_file: :hostname,
+          remote_path: "/etc/hostname"
+
+        shell do
+          <<~EOS
+            hostname <%= Consist.config[:hostname] %>
+          EOS
+        end
+      end
+
       step :update_apt_packages do
+        name "Updating APT packages"
         required_user :root
 
         upload_file message: "Uploading APT config...", local_file: :apt_auto_upgrade,
@@ -25,6 +45,7 @@ consist do
       end
 
       step :install_apt_packages do
+        name "Installing essential APT packages"
         required_user :root
 
         shell "Installing essential packages" do

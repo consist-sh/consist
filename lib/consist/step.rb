@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "erb"
+
 module Consist
   class StreamOutputInteractionHandler
     def initialize(log_level = :info)
@@ -41,6 +43,7 @@ module Consist
       return unless block_given?
 
       command = yield
+      command = erb_template(command)
 
       @commands << {message:, type: :exec, commands: command.split('\n').compact}
     end
@@ -62,7 +65,7 @@ module Consist
             target_file = Consist.files.detect { |f| f[:id] == command[:local_file] }
             raise "\n\nNo declared file of ID `#{command[:local_file]}`" unless target_file
 
-            contents = StringIO.new(target_file[:contents])
+            contents = StringIO.new(erb_template(target_file[:contents]))
             upload_defined_file(executor, contents, command[:remote_path])
           else
             local_path = File.expand_path("../steps/#{@id}/#{command[:local_file]}", __dir__)
@@ -74,6 +77,14 @@ module Consist
     end
 
     private
+
+    def erb_template(contents)
+      b = binding
+      Consist.config.keys.each do |key|
+        b.local_variable_set(key, Consist.config[key])
+      end
+      ERB.new(contents).result(b)
+    end
 
     def exec(executor, command)
       executor.as @required_user do
