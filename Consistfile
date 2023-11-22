@@ -1,5 +1,7 @@
 consist do
   config :hostname, "testexample.com"
+  config :swap_size, "2G"
+  config :swap_swappiness, "60"
 
   file :apt_auto_upgrade do
     <<~EOS
@@ -29,6 +31,9 @@ consist do
             hostname <%= Consist.config[:hostname] %>
           EOS
         end
+
+        mutate_file mode: :replace, target_file: "/etc/hosts", match: "^127.0.0.1 localhost$",
+          target_string: "127.0.0.1 localhost <%= hostname %>"
       end
 
       step :update_apt_packages do
@@ -65,6 +70,25 @@ consist do
             service ntp restart
             service fail2ban restart
           EOS
+        end
+      end
+
+      step :setup_swap do
+        name "Configure and enable the swapfile"
+        required_user :root
+
+        check status: :nonexistant, file: "/swapfile" do
+          shell do
+            <<~EOS
+              fallocate -l <%= swap_size %> /swapfile
+              chmod 600 /swapfile
+              mkswap /swapfile
+              swapon /swapfile
+              echo "\n/swapfile swap swap defaults 0 0\n" >> /etc/fstab
+              sysctl vm.swappiness=<%=swap_swappiness%>
+              echo "\nvm.swappiness=<%=swap_swappiness%>\n" >> /etc/sysctl.conf
+            EOS
+          end
         end
       end
     end

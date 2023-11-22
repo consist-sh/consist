@@ -3,14 +3,23 @@
 module Consist
   module Commands
     class Mutate
+      include Erbable
+
       def initialize(command)
         @command = command
       end
 
       def perform!(executor)
-        @command[:commands].each do
-          executor.execute(erb_template(_1), interaction_handler: Consist::Commands::StreamLogger.new)
+        target_file = @command[:target_file]
+        target_string = erb_template(@command[:target_string])
+        match = erb_template(@command[:match])
+
+        case @command[:mode]
+        when :replace
+          cmd = "sed -i -E \"s/#{match}/#{target_string}/\" #{target_file} "
         end
+
+        executor.execute(cmd, interaction_handler: Consist::Commands::StreamLogger.new)
       end
     end
   end

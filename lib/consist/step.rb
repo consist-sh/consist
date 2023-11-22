@@ -31,12 +31,16 @@ module Consist
       @commands << {message:, type: :exec, commands: command.split('\n').compact}
     end
 
-    def mutate_file(mode:, target_file:, match:, target_string:, message: nil)
-      @commands << {mode:, message:, type: :add_line, match:, target_file:, target_string:}
+    def mutate_file(mode:, target_file:, match:, target_string:, message: "")
+      @commands << {type: :mutate, mode:, message:, match:, target_file:, target_string:}
     end
 
-    def upload_file(message:, local_file:, remote_path:)
+    def upload_file(local_file:, remote_path:, message: "")
       @commands << {message:, type: :upload, local_file:, remote_path:}
+    end
+
+    def check(status:, path: nil, file: nil, message: "", &block)
+      @commands << {type: :check, message:, status:, file:, path:, block: -> { instance_eval(&block) }}
     end
 
     def perform(executor)

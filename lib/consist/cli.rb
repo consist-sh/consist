@@ -10,6 +10,8 @@ require "consist/commands/includes/stream_logger"
 require "consist/commands/includes/erbable"
 require "consist/commands/exec"
 require "consist/commands/upload"
+require "consist/commands/mutate"
+require "consist/commands/check"
 
 module Consist
   class CLI < Thor
