@@ -20,7 +20,8 @@ consist do
 
     steps do
       step :set_hostname do
-        upload_file message: "Setting hostname", local_file: :hostname,
+        upload_file message: "Setting hostname",
+          local_file: :hostname,
           remote_path: "/etc/hostname"
 
         shell do
@@ -34,7 +35,8 @@ consist do
         name "Updating APT packages"
         required_user :root
 
-        upload_file message: "Uploading APT config...", local_file: :apt_auto_upgrade,
+        upload_file message: "Uploading APT config...",
+          local_file: :apt_auto_upgrade,
           remote_path: "/etc/apt/apt.conf.d/20auto-upgrades"
 
         shell do

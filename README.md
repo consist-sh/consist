@@ -116,25 +116,79 @@ file of a recipe and all its steps. Something like:
 
 ```ruby
 consist do
-  recipe :main do
-    step :step1
-    step :step2
-    step :step3
-    ...
-  end
+  config :hostname, "testexample.com"
 
-  step :step1 do
-  ...
-  end
-
-  file :apt_auto_upgrades do
+  file :apt_auto_upgrade do
     <<~EOS
-    APT::Periodic::AutocleanInterval "7";
-    APT::Periodic::Update-Package-Lists "1";
-    APT::Periodic::Unattended-Upgrade "1";
+      APT::Periodic::AutocleanInterval "7";
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
     EOS
   end
+
+  file :hostname do
+    <<~EOS
+      <%= hostname %>
+    EOS
+  end
+
+  recipe :kamal_single_server do
+    name "Kamal Single Server Scaffold"
+
+    steps do
+      step :set_hostname do
+        upload_file message: "Setting hostname",
+          local_file: :hostname,
+          remote_path: "/etc/hostname"
+
+        shell do
+          <<~EOS
+            hostname <%= Consist.config[:hostname] %>
+          EOS
+        end
+      end
+
+      step :update_apt_packages do
+        name "Updating APT packages"
+        required_user :root
+
+        upload_file message: "Uploading APT config...",
+          local_file: :apt_auto_upgrade,
+          remote_path: "/etc/apt/apt.conf.d/20auto-upgrades"
+
+        shell do
+          <<~EOS
+            apt-get update && apt-get upgrade -y
+          EOS
+        end
+      end
+
+      step :install_apt_packages do
+        name "Installing essential APT packages"
+        required_user :root
+
+        shell "Installing essential packages" do
+          <<~EOS
+            apt-get -y remove systemd-timesyncd
+            timedatectl set-ntp no
+            apt-get -y install build-essential curl fail2ban git ntp vim
+            apt-get autoremove
+            apt-get autoclean
+          EOS
+        end
+
+        shell "Start NTP and Fail2Ban" do
+          <<~EOS
+            service ntp restart
+            service fail2ban restart
+          EOS
+        end
+      end
+    end
+  end
 end
+
+# vim: filetype=ruby
 ```
 
 Given a `Consistfile` you could then say `consist up <ip_address>` and
