@@ -3,22 +3,6 @@
 require "erb"
 
 module Consist
-  class StreamOutputInteractionHandler
-    def initialize(log_level = :info)
-      @log_level = log_level
-    end
-
-    def on_data(_command, _stream_name, data, _channel)
-      log(data)
-    end
-
-    private
-
-    def log(message)
-      SSHKit.config.output.send(@log_level, message) unless @log_level.nil?
-    end
-  end
-
   class Step
     include SSHKit::DSL
 
@@ -43,9 +27,12 @@ module Consist
       return unless block_given?
 
       command = yield
-      command = erb_template(command)
 
       @commands << {message:, type: :exec, commands: command.split('\n').compact}
+    end
+
+    def mutate_file(mode:, target_file:, match:, target_string:, message: nil)
+      @commands << {mode:, message:, type: :add_line, match:, target_file:, target_string:}
     end
 
     def upload_file(message:, local_file:, remote_path:)
@@ -56,53 +43,14 @@ module Consist
       @commands.each do |command|
         banner(command[:message]) unless command[:message].empty?
 
-        case command[:type]
-        when :exec
-          command[:commands].each { exec(executor, _1) }
-        when :upload
-          if command[:local_file].class == Symbol
-            puts "---> Uploading defined file #{command[:local_file]}"
-            target_file = Consist.files.detect { |f| f[:id] == command[:local_file] }
-            raise "\n\nNo declared file of ID `#{command[:local_file]}`" unless target_file
-
-            contents = StringIO.new(erb_template(target_file[:contents]))
-            upload_defined_file(executor, contents, command[:remote_path])
-          else
-            local_path = File.expand_path("../steps/#{@id}/#{command[:local_file]}", __dir__)
-            upload(executor, local_path, command[:remote_path])
-          end
-
+        execable = Object.const_get("Consist::Commands::#{command[:type].capitalize}").new(command)
+        executor.as @required_user do
+          execable.perform!(executor)
         end
       end
     end
 
     private
-
-    def erb_template(contents)
-      b = binding
-      Consist.config.keys.each do |key|
-        b.local_variable_set(key, Consist.config[key])
-      end
-      ERB.new(contents).result(b)
-    end
-
-    def exec(executor, command)
-      executor.as @required_user do
-        executor.send(:execute, command, interaction_handler: StreamOutputInteractionHandler.new)
-      end
-    end
-
-    def upload(executor, local_path, remote_path)
-      executor.as @required_user do
-        executor.send(:upload!, local_path, remote_path, interaction_handler: StreamOutputInteractionHandler.new)
-      end
-    end
-
-    def upload_defined_file(executor, contents, remote_path)
-      executor.as @required_user do
-        executor.upload! contents, remote_path
-      end
-    end
 
     def banner(message)
       return if message.empty?

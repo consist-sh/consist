@@ -6,6 +6,10 @@ require "consist/recipe"
 require "consist/recipes"
 require "consist/step"
 require "consist/consistfile"
+require "consist/commands/stream_logger"
+require "consist/commands/erbable"
+require "consist/commands/exec"
+require "consist/commands/upload"
 
 module Consist
   class CLI < Thor
