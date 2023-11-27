@@ -23,11 +23,12 @@ module Consist
         elsif status == :nonexistant && !exists
           @command[:block].call
         else
-          puts "Checking path `#{status}` - `#{val}` - #{exists ? "exists" : "doesn't exist"} and #{if status == :exist
-                                                                                                      "should"
-                                                                                                    elsif status == :nonexistant
-                                                                                                      "shoudlnt"
-                                                                                                    end} skipping"
+          tense = if status == :exist
+            "should"
+          elsif status == :nonexistant
+            "shoudlnt"
+          end
+          puts "Checking path `#{status}` - `#{val}` - #{exists ? "exists" : "doesn't exist"} and #{tense} - skipping"
         end
       end
     end
