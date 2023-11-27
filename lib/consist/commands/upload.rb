@@ -10,6 +10,7 @@ module Consist
       end
 
       def perform!(executor)
+        # rubocop:disable Style/ClassEqualityComparison
         if @command[:local_file].class == Symbol
           puts "---> Uploading defined file #{@command[:local_file]}"
           target_file = Consist.files.detect { |f| f[:id] == @command[:local_file] }
@@ -21,6 +22,7 @@ module Consist
           local_path = File.expand_path("../steps/#{@id}/#{@command[:local_file]}", __dir__)
           upload(executor, local_path, @command[:remote_path])
         end
+        # rubocop:enable Style/ClassEqualityComparison
       end
 
       def upload(executor, local_path, remote_path)
