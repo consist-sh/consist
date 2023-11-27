@@ -18,7 +18,6 @@ module Consist
 
         exists = executor.test("[ -#{flag} #{val} ]")
 
-        puts "--------> #{flag} #{val} #{exists}"
         if status == :exist && !exists
           @command[:block].call
         elsif status == :nonexistant && !exists
