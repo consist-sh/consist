@@ -242,6 +242,8 @@ consist do
         shell do
           <<~EOS
             apt-get update && apt-get upgrade -y
+            apt-get autoremove
+            apt-get autoclean
           EOS
         end
       end
@@ -252,20 +254,45 @@ consist do
 
         shell "Installing essential packages" do
           <<~EOS
+            apt-get -y install build-essential curl git vim
+          EOS
+        end
+      end
+
+      step :setup_ntp do
+        name "Installing NTP daemon"
+        required_user :root
+
+        shell "Configuring NTP daemon", params: {raise_on_non_zero_exit: false} do
+          <<~EOS
             apt-get -y remove systemd-timesyncd
-            timedatectl set-ntp no
-            apt-get -y install build-essential curl fail2ban git ntp vim
-            apt-get autoremove
-            apt-get autoclean
+            timedatectl set-ntp no 2>1
+            apt-get -y install ntp
+          EOS
+        end
+
+        shell "Start NTP and Fail2Ban" do
+          <<~EOS
+            service ntp restart
+          EOS
+        end
+      end
+
+      step :install_fail2ban do
+        name "Installing fail2ban"
+        required_user :root
+
+        shell "Installing essential packages" do
+          <<~EOS
+            apt-get -y install fail2ban
           EOS
         end
 
         upload_file message: "Uploading fail2ban confing", local_file: :fail2ban_config,
           remote_path: "/etc/fail2ban/jail.local"
 
-        shell "Start NTP and Fail2Ban" do
+        shell "Start Fail2Ban" do
           <<~EOS
-            service ntp restart
             service fail2ban restart
             systemctl enable fail2ban.service
           EOS
@@ -375,6 +402,51 @@ consist do
 
         upload_file message: "Uploading Logwatch confing", local_file: :logwatch_config,
           remote_path: "/etc/logwatch/conf"
+      end
+
+      step :setup_docker do
+        name "Setup Docker"
+
+        shell do
+          <<~EOS
+            # Add Docker's official GPG key:
+            apt-get update
+            apt-get install ca-certificates curl gnupg -y
+            install -m 0755 -d /etc/apt/keyrings
+            rm /etc/apt/keyrings/docker.gpg
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --batch --no-tty --dearmor -o /etc/apt/keyrings/docker.gpg
+            chmod a+r /etc/apt/keyrings/docker.gpg
+
+            # Add the repository to Apt sources:
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+              $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+              tee /etc/apt/sources.list.d/docker.list > /dev/null
+            apt-get update
+
+            # Install Docker
+            apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+            # Make Docker start on boot
+            sudo systemctl enable docker.service
+            sudo systemctl enable containerd.service
+          EOS
+        end
+
+        shell "Create docker group", params: {raise_on_non_zero_exit: false} do
+          <<~EOS
+            # Create group
+            sudo groupadd docker
+            sudo usermod -aG docker $USER
+          EOS
+        end
+
+        shell "Create default private network", params: {raise_on_non_zero_exit: false} do
+          <<~EOS
+            # Create default private network
+            docker network create private
+          EOS
+        end
       end
     end
   end
