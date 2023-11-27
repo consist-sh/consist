@@ -31,8 +31,8 @@ module Consist
       @commands << {message:, type: :exec, commands: command.split('\n').compact}
     end
 
-    def mutate_file(mode:, target_file:, match:, target_string:, message: "")
-      @commands << {type: :mutate, mode:, message:, match:, target_file:, target_string:}
+    def mutate_file(mode:, target_file:, match:, target_string:, delim: "/", message: "")
+      @commands << {type: :mutate, mode:, message:, match:, target_file:, delim:, target_string:}
     end
 
     def upload_file(local_file:, remote_path:, message: "")
