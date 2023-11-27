@@ -1,5 +1,6 @@
 consist do
   config :hostname, "testexample.com"
+  config :site_fqdn, "textexample.com"
   config :admin_email, "j@jmd.fm"
   config :swap_size, "2G"
   config :swap_swappiness, "60"
@@ -84,6 +85,16 @@ consist do
     EOS
   end
 
+  file :logwatch_config do
+    <<~EOS
+      Output = mail
+      MailTo = <%= admin_email %>
+      MailFrom = logwatch@host1.mydomain.org
+      Detail = Low
+      Service = All
+    EOS
+  end
+
   recipe :kamal_single_server do
     name "Kamal Single Server Scaffold"
 
@@ -163,6 +174,8 @@ consist do
       end
 
       step :setup_ufw do
+        name "Setup UFW"
+
         shell do
           <<~EOS
             ufw logging on
@@ -175,6 +188,44 @@ consist do
             service ufw restart
           EOS
         end
+      end
+
+      step :setup_postfix do
+        name "Install Postfix for admin emails"
+
+        shell do
+          <<~EOS
+            echo "postfix postfix/mailname string <%= site_fqdn %>" | debconf-set-selections
+          EOS
+        end
+
+        shell do
+          <<~EOS
+            echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections
+          EOS
+        end
+
+        shell do
+          <<~EOS
+            DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes postfix
+          EOS
+        end
+      end
+
+      step :setup_logwatch do
+        name "Setup Logwatch to automate log reporting"
+
+        shell do
+          <<~EOS
+            DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes logwatch
+          EOS
+        end
+
+        mutate_file mode: :replace, target_file: "/etc/cron.daily/00logwatch", match: "^/usr/sbin/logwatch --output mail$",
+          target_string: "/usr/sbin/logwatch --output mail --mailto <%= admin_email %> --detail high", delim: "#"
+
+        upload_file message: "Uploading Logwatch confing", local_file: :logwatch_config,
+          remote_path: "/etc/logwatch/conf"
       end
     end
   end
