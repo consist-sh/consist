@@ -150,6 +150,7 @@ consist do
           <<~EOS
             service ntp restart
             service fail2ban restart
+            systemctl enable fail2ban.service
           EOS
         end
       end
