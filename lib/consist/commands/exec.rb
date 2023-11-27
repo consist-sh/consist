@@ -11,7 +11,8 @@ module Consist
 
       def perform!(executor)
         @command[:commands].each do
-          executor.execute(erb_template(_1), interaction_handler: Consist::Commands::StreamLogger.new)
+          executor.execute(erb_template(_1), interaction_handler: Consist::Commands::StreamLogger.new,
+                                             **@command[:params])
         end
       end
     end

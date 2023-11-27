@@ -13,6 +13,11 @@ module Consist
       instance_eval(&block)
     end
 
+    def id(id = nil)
+      @id = id if id
+      @id
+    end
+
     def name(name = nil)
       @name = name if name
       @name
@@ -23,12 +28,14 @@ module Consist
       @required_user
     end
 
-    def shell(message = "")
+    def shell(message = "", params: {})
       return unless block_given?
 
       command = yield
+      commands = command.lines.select { !_1.start_with?("#") }.compact
+      puts commands.inspect
 
-      @commands << {message:, type: :exec, commands: command.split('\n').compact}
+      @commands << {message:, type: :exec, commands:, params:}
     end
 
     def mutate_file(mode:, target_file:, match:, target_string:, delim: "/", message: "")

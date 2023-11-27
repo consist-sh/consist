@@ -11,8 +11,9 @@ module Consist
   class Consistfile
     include SSHKit::DSL
 
-    def initialize(server_ip)
+    def initialize(server_ip, specified_step)
       @server_ip = server_ip
+      @specified_step = specified_step
       consistfile = File.read(File.expand_path("Consistfile", Dir.pwd))
       instance_eval(consistfile)
     end
@@ -25,12 +26,15 @@ module Consist
       recipe = Consist::Recipe.new(id, &definition)
 
       puts "Executing Recipe: #{recipe.name}"
-      recipe.steps.each do |step|
-        puts "Executing Step: #{step.name}"
 
-        on("#{step.required_user}@#{@server_ip}") do
-          step.perform(self)
-        end
+      if @specified_step.nil?
+        recipe.steps.each { exec_step(_1) }
+      else
+        puts "Specific step targeted: #{@specified_step.to_sym}"
+        specified_step, *_rest = recipe.steps.select { _1.id === @specified_step.to_sym }
+        raise "Step with id #{@specified_step.to_sym} not found." unless specified_step
+
+        exec_step(specified_step)
       end
 
       puts "Execution of #{recipe.name} has completed."
@@ -46,6 +50,16 @@ module Consist
 
     def config(id, val)
       Consist.config[id] = val
+    end
+
+    private
+
+    def exec_step(specified_step)
+      puts "Executing Step: #{specified_step.name}"
+
+      on("#{specified_step.required_user}@#{@server_ip}") do
+        specified_step.perform(self)
+      end
     end
   end
 end

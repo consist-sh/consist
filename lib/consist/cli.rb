@@ -39,9 +39,11 @@ module Consist
       Consist::Recipes.new(server_ip)
     end
 
+    option :step, type: :string
     desc "up", "Run a Consistfile against a server"
     def up(server_ip)
-      Consist::Consistfile.new(server_ip)
+      step = options[:step]
+      Consist::Consistfile.new(server_ip, step)
     end
   end
 end
