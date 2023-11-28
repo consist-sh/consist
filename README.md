@@ -12,7 +12,15 @@ THIS IS BETA SOFTWARE UNDER ACTIVE DEVELOPMENT. APIs AND FEATURES WILL CHANGE.
 `consist` is the one person framework server scaffolder. You can use it to quickly
 baseline a raw server using a given recipe provided by Consist. I use it to
 baseline new Droplets to be ready to run Kamal in single server setup for
-a Rails monolith.
+a Rails monolith. While Kamal will setup Docker for you, it does not do anything
+else related to configuring the underlying server, such as firewalls, general
+hardening, enabling swapfile etc.
+
+## Project Principles
+
+- Minimal tool specific language / knowledge required to use Consist
+- Procedural declaration execution - no converging, orchestration or event driven operation
+- If you can shell script it, you can consist it directly
 
 ---
 
@@ -69,8 +77,8 @@ Ain't nobody stopping you.
 
 ## Key Concepts
 
-Consist leans on two primary ideas: recipes and steps. Recipes contain one or more
-steps. Steps tend to be atomic and idempotent.
+Consist leans on three primary ideas: recipes, steps and files. Recipes contain
+one or more steps. Steps tend to be atomic and idempotent.
 
 Example of a recipe:
 
@@ -111,8 +119,9 @@ end
 
 ### Consistfile
 
-I'm working on this right now. A `Consistfile` is a portable giant
-file of a recipe and all its steps. Something like:
+A `Consistfile` is a portable giant file of a recipe and all its
+steps. Something like (this is a _full_ example, in practice you
+would reference some of Consist's built in steps):
 
 ```ruby
 consist do
