@@ -2,8 +2,8 @@
 
 [![Gem Version](https://img.shields.io/gem/v/consist)](https://rubygems.org/gems/consist)
 [![Gem Downloads](https://img.shields.io/gem/dt/consist)](https://www.ruby-toolbox.com/projects/consist)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/johnmcdowall/consist/ci.yml)](https://github.com/consist-sh/consist/actions/workflows/ci.yml)
-[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/johnmcdowall/consist)](https://codeclimate.com/github/consist-sh/consist)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/consist-sh/consist/ci.yml)](https://github.com/consist-sh/consist/actions/workflows/ci.yml)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/consist-sh/consist)](https://codeclimate.com/github/consist-sh/consist)
 
 THIS IS BETA SOFTWARE UNDER ACTIVE DEVELOPMENT. APIs AND FEATURES WILL CHANGE.
 
