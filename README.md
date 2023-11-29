@@ -597,7 +597,7 @@ and I will do my best to provide a helpful answer.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](LICENSE.txt).
+The gem is available as open source under the terms of the [LGPLv3 License](LICENSE.txt).
 
 ## Code of conduct
 
