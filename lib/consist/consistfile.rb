@@ -11,11 +11,17 @@ module Consist
   class Consistfile
     include SSHKit::DSL
 
-    def initialize(server_ip, specified_step)
+    def initialize(server_ip, specified_step:, consistfile:)
       @server_ip = server_ip
       @specified_step = specified_step
-      consistfile = File.read(File.expand_path("Consistfile", Dir.pwd))
-      instance_eval(consistfile)
+      consistfile_path = if consistfile
+        File.expand_path(consistfile, Dir.pwd)
+      else
+        File.expand_path("Consistfile", Dir.pwd)
+      end
+
+      consistfile_contents = File.read(consistfile_path)
+      instance_eval(consistfile_contents)
     end
 
     def consist(&definition)

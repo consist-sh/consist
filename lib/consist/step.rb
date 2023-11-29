@@ -33,7 +33,6 @@ module Consist
 
       command = yield
       commands = command.lines.select { !_1.start_with?("#") }.compact
-      puts commands.inspect
 
       @commands << {message:, type: :exec, commands:, params:}
     end

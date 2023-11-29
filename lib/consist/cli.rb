@@ -40,10 +40,12 @@ module Consist
     end
 
     option :step, type: :string
+    option :consistfile, type: :string
     desc "up", "Run a Consistfile against a server"
     def up(server_ip)
-      step = options[:step]
-      Consist::Consistfile.new(server_ip, step)
+      specified_step = options[:step]
+      consistfile = options[:consistfile]
+      Consist::Consistfile.new(server_ip, consistfile:, specified_step:)
     end
   end
 end

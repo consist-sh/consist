@@ -195,6 +195,13 @@ consist do
     name "Kamal Single Server Scaffold"
 
     steps do
+      step :whoami do
+        shell do
+          <<~EOS
+            whoami
+          EOS
+        end
+      end
       step :set_hostname do
         upload_file message: "Setting hostname",
           local_file: :hostname,
