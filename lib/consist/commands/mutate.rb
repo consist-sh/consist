@@ -17,7 +17,7 @@ module Consist
 
         case @command[:mode]
         when :replace
-          cmd = "sed -ci -E 's#{delim}#{match}#{delim}#{target_string}#{delim}' #{target_file} "
+          cmd = "sed -i -E 's#{delim}#{match}#{delim}#{target_string}#{delim}' #{target_file} "
         end
 
         executor.execute(cmd, interaction_handler: Consist::Commands::StreamLogger.new)
