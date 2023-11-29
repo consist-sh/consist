@@ -42,13 +42,23 @@ gem install consist
 You must be already auth'd with the server you want to scaffold. `consist` will use
 your SSH id to perform actions.
 
-Then:
+Then, you have two ways of interacting with Consist. First is the `scaffold` command:
 
 ```sh
 consist scaffold <recipe_name> root <ip_address>
 ```
 
-Will kick off the scaffolding of that given server with the given recipe.
+Will kick off the scaffolding of that given server with the given
+recipe, using the `root` user.
+
+The other way of using `consist` is to go with a `Consistfile` in
+your project root that describes the recipe and steps. Then you can say:
+
+```sh
+consist up <ip_address>
+```
+
+And `consist` will do it's thing with that given IP address.
 
 ## Rationale
 
