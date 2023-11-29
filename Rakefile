@@ -10,6 +10,12 @@ end
 
 task default: %i[test standard]
 
+namespace :test do
+  task :smoke do
+    system("bin/dev up 143.198.104.229 --consistfile=test/Consistfile.test")
+  end
+end
+
 # == "rake release" enhancements ==============================================
 
 Rake::Task["release"].enhance do
