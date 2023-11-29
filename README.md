@@ -653,3 +653,5 @@ ideas. Thanks.
 1. Clone the repo
 2. Run `bundle install`
 3. Run `bin/dev` to execute consist locally without having to build and install.
+
+Make sure any PRs have been formatted with `standard`.
