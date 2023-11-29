@@ -22,7 +22,7 @@ server, such as firewalls, general hardening, enabling swapfile etc.
 - Minimal tool specific language / knowledge required to use Consist
 - Procedural declaration execution - no converging, orchestration or
   event driven operation
-- If you can shell script it, you can consist it directly
+- If you can shell script it, you can `consist` it directly
 
 ---
 
