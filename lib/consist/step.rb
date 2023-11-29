@@ -32,7 +32,7 @@ module Consist
       return unless block_given?
 
       command = yield
-      commands = command.lines.select { !_1.start_with?("#") }.compact
+      commands = command.split(/(?<!\\)\n/).select { !_1.start_with?("#") }.compact
 
       @commands << {message:, type: :exec, commands:, params:}
     end
