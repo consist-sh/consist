@@ -5,21 +5,23 @@
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/consist-sh/consist/ci.yml)](https://github.com/consist-sh/consist/actions/workflows/ci.yml)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/consist-sh/consist)](https://codeclimate.com/github/consist-sh/consist)
 
-THIS IS BETA SOFTWARE UNDER ACTIVE DEVELOPMENT. APIs AND FEATURES WILL CHANGE.
+**THIS IS BETA SOFTWARE UNDER ACTIVE DEVELOPMENT. APIs AND FEATURES WILL CHANGE.**
 
 > consist - (noun): a set of railroad vehicles forming a complete train.
 
-`consist` is the one person framework server scaffolder. You can use it to quickly
-baseline a raw server using a given recipe provided by Consist. I use it to
-baseline new Droplets to be ready to run Kamal in single server setup for
-a Rails monolith. While Kamal will setup Docker for you, it does not do anything
-else related to configuring the underlying server, such as firewalls, general
-hardening, enabling swapfile etc.
+`consist` is the one person framework server scaffolder. It is stone age tech.
+
+You can use it to quickly baseline a raw server using a given recipe provided
+by Consist. I use it to baseline new Droplets to be ready to run Kamal in
+single server setup for a Rails monolith. While Kamal will setup Docker
+for you, it does not do anything else related to configuring the underlying
+server, such as firewalls, general hardening, enabling swapfile etc.
 
 ## Project Principles
 
 - Minimal tool specific language / knowledge required to use Consist
-- Procedural declaration execution - no converging, orchestration or event driven operation
+- Procedural declaration execution - no converging, orchestration or
+  event driven operation
 - If you can shell script it, you can consist it directly
 
 ---
@@ -60,6 +62,12 @@ consist up <ip_address>
 
 And `consist` will do it's thing with that given IP address.
 
+## Features
+
+- Simple Ruby based DSL
+- ERB interpolation of config on shell commands and file contents
+- Small API surface area - quick to learn
+
 ## Rationale
 
 I wanted a super-simple tool, that was baked in Ruby, for setting up
@@ -72,16 +80,21 @@ on the scale.
 If you know how to shell script what you want, you can stick it in a step,
 and add it to a recipe.
 
+The more I work in this industry, the less I see using other people's code
+and tools as a benefit, and more of a liability. I appreciate the paradox I'm
+creating here for you 😅
+
 ### Why not use Terraform / Ansible / Salt etc?
 
-Because I think they are bad tools that are overblown for my needs. I wanted something
-I could hack on, and will work specifically without ambiguity. For example, Ansible
-has a lot of nonsense with case sensitivity, Terraform does [weird unexpected things](https://github.com/hashicorp/terraform/issues/16330).
+I think they are bad tools for my needs. I wanted something simple
+I could hack on, grow only when needed, and will work specifically
+without ambiguity. For example, Ansible has a lot of nonsense with case sensitivity,
+Terraform does [weird unexpected things](https://github.com/hashicorp/terraform/issues/16330).
 
-I also didn't want to maintain specific knowledge of these infrastructure
-as code tools in my brain anymore, and all of their peculiarities and oddities.
+I didn't want to keep maintaining specific knowledge of these infrastructure
+as code tools in my brain anymore, along with all of their peculiarities and oddities.
 
-If you like those tools, go ahead and use them. Use raw shell scripts if you want.
+**If you prefer those tools, go ahead and use them.**
 
 Ain't nobody stopping you.
 
@@ -89,6 +102,8 @@ Ain't nobody stopping you.
 
 Consist leans on three primary ideas: recipes, steps and files. Recipes contain
 one or more steps. Steps tend to be atomic and idempotent.
+
+### Recipes
 
 Example of a recipe:
 
@@ -102,6 +117,8 @@ steps do
   step :install_apt_packages
 end
 ```
+
+### Steps
 
 Example of a step:
 
@@ -123,6 +140,18 @@ shell "Start NTP and Fail2Ban" do
   <<~EOS
     service ntp restart
     service fail2ban restart
+  EOS
+end
+```
+
+### Files
+
+Example of a file:
+
+```ruby
+file :hostname do
+  <<~EOS
+  <%= hostname %>
   EOS
 end
 ```
