@@ -16,9 +16,10 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
-        working-directory: ./docs
         with:
           bundler-cache: true
+      - run: bundle install
+        working-directory: ./docs
 
       - name: Setup Node
         uses: actions/setup-node@v2
