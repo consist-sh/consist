@@ -1,6 +1,7 @@
 class NavigationComponent < Bridgetown::Component
-  def initialize(resources)
-    @resources = resources
+  def initialize(resources, recipes)
+    @resources = resources + recipes.resources
+    @recipes = recipes
   end
 
   def grouped_and_sorted_documentation_resources

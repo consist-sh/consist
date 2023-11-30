@@ -1,46 +1,27 @@
 ---
 layout: docs
-title: Layout
-description: Learn about the layout of a Consistfile
-section: Consistfile
+title: Kamal - Single Server Setup
+description: Setup a server with basic best practices for running Kamal
+section: Recipes
 category: ""
 ---
 
-# General Layout
+## Features
 
-The root of a `Consistfile` should be the `consist` block:
+- Sets up Swapfile 
+- Sets Hostname 
+- Sets Timezone
+- Sets Unatttended Upgrades 
+- Sets up fail2ban
+- Sets up logwatch
+- Sets up postfix for admin emails
+- Sets up ufw and configures it to allow only 80, 443 and 22.
+- Basic SSH hardening to only allow public key PubkeyAuthentication
+- Basic Sysctl network hardening
+- Sets up Docker
+- Sets up Docker `private` network
 
-```ruby
-consist do
-  ...
-end
-```
-
-Within the `consist` block, the options available are `config`, `file`,
-`recipe`, `steps` and `step`, which should be defined in the
-following order:
-
-1. `config`
-2. `file`
-3. `recipe`
-   1. `steps`
-      1. `step`
-
-## `config` declarations
-
-`config` allows the simple declaration of a key and a value. All `config`
-declarations are available to be interpolated in `shell` statements.
-
-## `file` declarations
-
-`file` declarations allow a block of text to be defined with an `id` that can
-then be used to upload to a remote server. Any `config` value can be
-interpolated into the contents via standard ERB tags like `<%%= hostname %>`
-if you have defined a `config :hostname, "example.com"`
-
-### Complete Example
-
-Example:
+## Consistfile
 
 ```ruby
 consist do

@@ -21,6 +21,14 @@ url: "https://consist.sh" # the base hostname & protocol for your site, e.g. htt
 
 permalink: pretty
 template_engine: erb
+rougify:
+  theme: "base16.solarized.dark"
+
+collections:
+  recipes:
+    name: Recipes
+    output: true
+    permalink: simple
 # Other options you might want to investigate:
 #
 # base_path: "/" # the subpath of your site, e.g. /blog. If you set this option,

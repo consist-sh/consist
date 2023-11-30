@@ -46,7 +46,6 @@ Bridgetown.configure do |_config|
   # uncomment the gem dependency in your `Gemfile` as well):
   #
   # init :"bridgetown-routes"
-  #
 
   # We also recommend that if you're using Roda routes you include this plugin
   # so you can get a generated routes list in `.routes.json`. You can then run
