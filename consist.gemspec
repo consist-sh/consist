@@ -7,14 +7,14 @@ Gem::Specification.new do |spec|
   spec.email = ["john@kantan.io"]
 
   spec.summary = "The one person framework server scaffolder"
-  spec.homepage = "https://github.com/johnmcdowall/consist"
+  spec.homepage = "https://github.com/consist-sh/consist"
   spec.license = "LGPL-3.0"
   spec.required_ruby_version = ">= 3.0"
 
   spec.metadata = {
-    "bug_tracker_uri" => "https://github.com/johnmcdowall/consist/issues",
-    "changelog_uri" => "https://github.com/johnmcdowall/consist/releases",
-    "source_code_uri" => "https://github.com/johnmcdowall/consist",
+    "bug_tracker_uri" => "https://github.com/consist-sh/consist/issues",
+    "changelog_uri" => "https://github.com/consist-sh/consist/releases",
+    "source_code_uri" => "https://github.com/consist-sh/consist",
     "homepage_uri" => spec.homepage,
     "rubygems_mfa_required" => "true"
   }
