@@ -65,7 +65,7 @@ namespace :bump do
   end
 
   task :year do
-    replace_in_file "LICENSE.txt", /\(c\) (\d+)/ => Date.today.year.to_s
+    # replace_in_file "LICENSE.txt", /\(c\) (\d+)/ => Date.today.year.to_s
   end
 end
 
