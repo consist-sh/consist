@@ -20,7 +20,7 @@ end
 
 Rake::Task["release"].enhance do
   puts "Don't forget to publish the release on GitHub!"
-  system "open https://github.com/johnmcdowall/consist/releases"
+  system "open https://github.com/consist-sh/consist/releases"
 end
 
 task :disable_overcommit do
