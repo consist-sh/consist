@@ -1,0 +1,39 @@
+---
+layout: default
+---
+
+<%= render HeaderComponent.new(site) %>
+
+<main class="relative flex justify-center mx-auto max-w-8xl sm:px-2 lg:px-8 xl:px-12">
+  <%= render NavigationComponent.new(page.collection.resources) %>
+
+  <div class="flex-auto max-w-2xl min-w-0 px-4 py-10 lg:max-w-none lg:pr-0 lg:pl-8 xl:px-16">
+    <article class="">
+      <header class="">
+        <p class="text-base font-medium text-slate-500">
+          <%= page.data.category.titleize %>
+        </p>
+
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900">
+          <%= page.data.title %>
+        </h1>
+      </header>
+
+      <p class="mt-2 text-xl text-slate-600">
+        <%= page.data.description %>
+      </p>
+
+      <%= render VideoTourComponent.new if page.data.show_videotour %>
+
+      <%= render QuickLinksComponent.new if page.data.show_quicklinks %>
+
+      <div class="mt-8 prose prose-slate max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-lead:text-slate-500 prose-a:font-semibold prose-a:underline prose-pre:bg-slate-900">
+        <%= content %>
+      </div>
+
+      <%= render ContentFooterComponent.new(site) %>
+    </article>
+
+    <%= render ContentNavigationComponent.new(page) %>
+  </div>
+</main>

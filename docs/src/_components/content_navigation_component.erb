@@ -1,0 +1,29 @@
+<dl class="flex pt-6 mt-6 border-t border-slate-200">
+  <% if !@page.previous.nil? %>
+    <div class="mr-auto text-left">
+      <dt class="text-sm font-normal tracking-tight text-slate-600">
+      Previous
+      </dt>
+
+      <dd class="mt-1">
+        <a href="<%= @page.previous.relative_url %>" class="text-base font-semibold text-slate-900 hover:underline">
+          <%= @page.previous.data.title %>
+        </a>
+      </dd>
+    </div>
+  <% end %>
+
+  <% if !@page.next.nil? %>
+    <div class="ml-auto text-right">
+      <dt class="text-sm font-normal tracking-tight text-slate-600">
+        Next
+      </dt>
+
+      <dd class="mt-1">
+        <a href="<%= @page.next.relative_url %>" class="text-base font-semibold text-slate-900 hover:underline">
+          <%= @page.next.data.title %>
+        </a>
+      </dd>
+    </div>
+  <% end %>
+</dl>
