@@ -25,9 +25,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "16"
-          cache: "yarn"
-      - run: yarn install
-        working-directory: ./docs
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+          cwd: docs
 
       - name: Build
         env:
