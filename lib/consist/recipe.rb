@@ -2,9 +2,16 @@
 
 module Consist
   class Recipe
-    def initialize(_id = nil, &definition)
+    def initialize(id = nil, &definition)
       @steps = []
-      instance_eval(&definition)
+      @id = id
+
+      if definition
+        instance_eval(&definition)
+      else
+        contents = Consist::Resolver.new(pwd: Dir.pwd).resolve_artifact(type: :recipe, id:)
+        instance_eval(contents)
+      end
     end
 
     def name(name = nil)
@@ -22,21 +29,13 @@ module Consist
       @user
     end
 
-    def steps(&block)
-      instance_eval(&block) if block
+    def steps(&definition)
+      instance_eval(&definition) if definition
       @steps
     end
 
-    def step(step_name, &block)
-      if block
-        @steps << Step.new(id: step_name, &block)
-        return
-      end
-
-      target_path = File.join("../../", "steps", step_name.to_s, "step.rb")
-      step_path = File.expand_path(target_path, __FILE__)
-      step_content = File.read(step_path)
-      @steps << Step.new(id: step_name) { instance_eval(step_content) }
+    def step(id, &definition)
+      @steps << Step.new(id:, &definition)
     end
   end
 end

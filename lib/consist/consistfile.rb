@@ -30,7 +30,6 @@ module Consist
 
     def recipe(id, &definition)
       recipe = Consist::Recipe.new(id, &definition)
-
       puts "Executing Recipe: #{recipe.name}"
 
       if @specified_step.nil?
@@ -47,9 +46,12 @@ module Consist
     end
 
     def file(id, &definition)
-      return unless definition
-
-      contents = yield
+      if definition
+        contents = yield
+      else
+        file_contents = Consist::Resolver.new(pwd: Dir.pwd).resolve_artifact(type: :file, id:)
+        contents = file_contents
+      end
 
       Consist.files << {id:, contents:}
     end

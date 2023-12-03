@@ -2,6 +2,7 @@ require "thor"
 require "sshkit"
 require "sshkit/dsl"
 
+require "consist/resolver"
 require "consist/recipe"
 require "consist/recipes"
 require "consist/step"
