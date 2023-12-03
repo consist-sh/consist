@@ -16,6 +16,7 @@ require "consist/commands/check"
 module Consist
   class CLI < Thor
     extend ThorExt::Start
+    include SSHKit::DSL
 
     map %w[-v --version] => "version"
 
@@ -24,8 +25,8 @@ module Consist
       say "consist/#{VERSION} #{RUBY_DESCRIPTION}"
     end
 
-    desc "lightup", "Attempt to connect to a server and execute an idempotent statement."
-    def lightup(user, server)
+    desc "ping", "Attempt to connect to a server and execute an idempotent statement."
+    def ping(user, server)
       puts "---> Attempting to connect to #{server} as #{user}"
       on("#{user}@#{server}") do
         as user do
