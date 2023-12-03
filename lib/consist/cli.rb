@@ -7,7 +7,6 @@ require "sshkit/dsl"
 require "consist/utils"
 require "consist/resolver"
 require "consist/recipe"
-require "consist/recipes"
 require "consist/step"
 require "consist/consistfile"
 require "consist/commands/includes/stream_logger"
@@ -42,11 +41,6 @@ module Consist
           execute "true"
         end
       end
-    end
-
-    desc "scaffold", "Apply a given recipe to (a) server(s)"
-    def scaffold(_recipe, server_ip)
-      Consist::Recipes.new(server_ip)
     end
 
     option :step, type: :string
