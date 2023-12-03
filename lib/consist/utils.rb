@@ -13,6 +13,7 @@ module Consist
 
       Dir.foreach(temp_dir) do |item|
         next if [".", "..", ".git"].include?(item)
+        next unless ["Consistfile", ".consist"].include?(item)
 
         source_path = File.join(temp_dir, item)
         target_path = File.join(target_dir, item)
