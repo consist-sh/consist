@@ -1,0 +1,19 @@
+consist do 
+  config :example, "example"
+
+  # Define a recipe block:
+  #
+  # recipe :my_recipe do
+  #   name "My recipe"
+  #
+  #   steps do 
+  #     step do 
+  #       shell do
+  #         <<~EOS
+  #           echo 'hello'
+  #         EOS
+  #       end
+  #     end
+  #   end
+  # end
+end
