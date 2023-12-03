@@ -2,18 +2,21 @@
 
 module Consist
   class << self
-    attr_accessor :files, :config
+    attr_accessor :files, :config, :consist_dir
   end
 
   @files = []
   @config = {}
+  @consist_dir = ""
 
   class Consistfile
     include SSHKit::DSL
 
-    def initialize(server_ip, specified_step:, consistfile:)
+    def initialize(server_ip, specified_step:, consist_dir:, consistfile:)
       @server_ip = server_ip
       @specified_step = specified_step
+      Consist.consist_dir = consist_dir || ".consist"
+
       consistfile_path = if consistfile
         File.expand_path(consistfile, Dir.pwd)
       else
