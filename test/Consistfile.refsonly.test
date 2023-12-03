@@ -1,0 +1,19 @@
+consist do
+  config :hostname, "testexample.com"
+  config :site_fqdn, "textexample.com"
+  config :admin_email, "j@jmd.fm"
+  config :swap_size, "2G"
+  config :swap_swappiness, "60"
+  config :timezone, "UTC"
+
+  file :apt_auto_upgrade
+  file :hostname
+  file :timezone
+  file :fail2ban_config
+  file :logwatch_config
+  file :sysctl_config
+
+  recipe :kamal_single_server
+end
+
+# vim: filetype=ruby

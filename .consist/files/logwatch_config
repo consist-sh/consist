@@ -1,0 +1,5 @@
+Output = mail
+MailTo = <%= admin_email %>
+MailFrom = logwatch@host1.mydomain.org
+Detail = Low
+Service = All

@@ -2,18 +2,21 @@
 
 module Consist
   class << self
-    attr_accessor :files, :config
+    attr_accessor :files, :config, :consist_dir
   end
 
   @files = []
   @config = {}
+  @consist_dir = ""
 
   class Consistfile
     include SSHKit::DSL
 
-    def initialize(server_ip, specified_step:, consistfile:)
+    def initialize(server_ip, specified_step:, consist_dir:, consistfile:)
       @server_ip = server_ip
       @specified_step = specified_step
+      Consist.consist_dir = consist_dir || ".consist"
+
       consistfile_path = if consistfile
         File.expand_path(consistfile, Dir.pwd)
       else
@@ -30,7 +33,6 @@ module Consist
 
     def recipe(id, &definition)
       recipe = Consist::Recipe.new(id, &definition)
-
       puts "Executing Recipe: #{recipe.name}"
 
       if @specified_step.nil?
@@ -47,9 +49,12 @@ module Consist
     end
 
     def file(id, &definition)
-      return unless definition
-
-      contents = yield
+      if definition
+        contents = yield
+      else
+        file_contents = Consist::Resolver.new(pwd: Dir.pwd).resolve_artifact(type: :file, id:)
+        contents = file_contents
+      end
 
       Consist.files << {id:, contents:}
     end

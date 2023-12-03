@@ -6,11 +6,17 @@ module Consist
   class Step
     include SSHKit::DSL
 
-    def initialize(id:, &block)
+    def initialize(id:, &definition)
       @commands = []
       @id = id
       @required_user = :root
-      instance_eval(&block)
+
+      if definition
+        instance_eval(&definition)
+      else
+        contents = Consist::Resolver.new(pwd: Dir.pwd).resolve_artifact(type: :step, id:)
+        instance_eval(contents)
+      end
     end
 
     def id(id = nil)

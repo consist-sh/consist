@@ -11,8 +11,13 @@ end
 task default: %i[test standard]
 
 namespace :test do
-  task :smoke do
-    system("bin/dev up 143.198.104.229 --consistfile=test/Consistfile.test")
+  namespace :smoke do
+    task :consistfile, [:ip] do |_task, args|
+      system("VERBOSE=1 bin/dev up #{args[:ip]} --consistfile=test/Consistfile.test")
+    end
+    task :consistfile_refs, [:ip] do |_task, args|
+      system("VERBOSE=1 bin/dev up #{args[:ip]} --consistfile=test/Consistfile.refsonly.test")
+    end
   end
 end
 
