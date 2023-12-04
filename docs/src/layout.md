@@ -26,6 +26,21 @@ following order:
    1. `steps`
       1. `step`
 
+## Artifact IDs 
+
+If you omit a block, Consist will try to look up that ID as a file type inside
+the `.consist` directory at the root of your project. For example, 
+
+```ruby
+file :apt_auto_upgrade
+```
+
+Will cause consist to look for a file at `.consist/files/apt_auto_upgrade` and
+include its contents in that place of the `Consistfile`. This allows you to 
+split up a large `Consistfile` into smaller chunks. 
+
+This works for `file`, `recipe` and `steps`.
+
 ## `config` declarations
 
 `config` allows the simple declaration of a key and a value. All `config`

@@ -5,13 +5,13 @@ class NavigationComponent < Bridgetown::Component
   end
 
   def grouped_and_sorted_documentation_resources
-    group_by(@resources, "section")
-      .sort_by { |resources| documentation_sections_order.find_index(resources["name"]) }
+    group_by(@resources, 'section')
+      .sort_by { |resources| documentation_sections_order.find_index(resources['name']) }
   end
 
   private
 
   def documentation_sections_order
-    []
+    %w[Introduction Consistfile Recipes]
   end
 end
