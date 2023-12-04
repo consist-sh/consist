@@ -37,7 +37,7 @@ server, such as firewalls, general hardening, enabling swapfile etc.
   - [Consistfile](#consistfile)
   - [Artifacts](#artifacts)
   - [.consist directory](#.consist-directory)
-- [Comunity Consistfiles](#community-consistfiles)
+- [Community Consistfiles](#community-consistfiles)
 - [Is It Good?](#is-it-good%3F)
 - [License](#license)
 - [Code of conduct](#code-of-conduct)
