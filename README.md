@@ -45,6 +45,8 @@ server, such as firewalls, general hardening, enabling swapfile etc.
 
 ## Quick start
 
+Make sure the `consist` gem is installed:
+
 ```sh
 gem install consist
 ```
