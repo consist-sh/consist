@@ -61,7 +61,7 @@ module Consist
         Consist::Utils.clone_repo_contents(full_url, Dir.pwd)
       else
         puts "Creating new Consistfile..."
-        directory "templates/.consist", File.join(Dir.pwd, ".consist")
+        directory "templates/consist", File.join(Dir.pwd, ".consist")
         template "templates/Consistfile.tt", File.join(Dir.pwd, "Consistfile")
         puts "...done"
       end
