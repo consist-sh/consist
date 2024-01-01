@@ -38,7 +38,7 @@ jobs:
         run: bin/bridgetown deploy
 
       - name: Upload build artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs/output
 
